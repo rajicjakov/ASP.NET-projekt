@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "type": "command",
+        "windows": "powershell.exe -ExecutionPolicy Bypass -File .github/hooks/log-prompt.ps1",
+        "timeout": 5
+      }
+    ],
+    "PreToolUse": [
+      {
+        "type": "command",
+        "windows": "powershell.exe -ExecutionPolicy Bypass -File .github/hooks/log-prompt.ps1",
+        "timeout": 5
+      }
+    ]
+  }
+}
