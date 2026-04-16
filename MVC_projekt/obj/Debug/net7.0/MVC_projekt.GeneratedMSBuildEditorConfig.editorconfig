@@ -16,12 +16,28 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\liker\source\repos\RajicJakov\ASP.NET-projekt\MVC_projekt
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/liker/source/repos/RajicJakov/ASP.NET-projekt/MVC_projekt/Views/Browse/Browse.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnJvd3NlXEJyb3dzZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/liker/source/repos/RajicJakov/ASP.NET-projekt/MVC_projekt/Views/Browse/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnJvd3NlXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/liker/source/repos/RajicJakov/ASP.NET-projekt/MVC_projekt/Views/Editor/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWRpdG9yXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/liker/source/repos/RajicJakov/ASP.NET-projekt/MVC_projekt/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/liker/source/repos/RajicJakov/ASP.NET-projekt/MVC_projekt/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/liker/source/repos/RajicJakov/ASP.NET-projekt/MVC_projekt/Views/Login/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cTG9naW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/liker/source/repos/RajicJakov/ASP.NET-projekt/MVC_projekt/Views/Shared/Error.cshtml]

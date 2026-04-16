@@ -1,0 +1,58 @@
+@{
+    ViewData["Title"] = "Create Tab";
+}
+
+<section>
+    <div class="browse-header">
+        <h1>Create New Tab</h1>
+        <p>Add a new guitar tab to the archive</p>
+    </div>
+
+    <div class="create-container">
+        <form method="post" class="create-form">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="tabTitle">Song Title</label>
+                    <input type="text" id="tabTitle" name="title" class="form-input" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="tabArtist">Artist</label>
+                    <input type="text" id="tabArtist" name="artist" class="form-input" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="tabTuning">Tuning</label>
+                    <input type="text" id="tabTuning" name="tuning" class="form-input" placeholder="e.g., E-A-D-G-B-E" />
+                </div>
+
+                <div class="form-group">
+                    <label for="tabBPM">BPM</label>
+                    <input type="number" id="tabBPM" name="bpm" class="form-input" />
+                </div>
+
+                <div class="form-group">
+                    <label for="tabDifficulty">Difficulty</label>
+                    <select id="tabDifficulty" name="difficulty" class="form-input">
+                        <option value="VeryEasy">Very Easy</option>
+                        <option value="Easy">Easy</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Hard">Hard</option>
+                        <option value="Impossible">Impossible</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="tab-editor-placeholder">
+                <h2>Tab Editor</h2>
+                <p>The tab editor will be displayed here</p>
+                <p>This is where users will create and edit guitar tab notation</p>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="form-button">Save Tab</button>
+                <a href="@Url.Action("Browse", "Browse")" class="form-button-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>

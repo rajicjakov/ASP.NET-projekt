@@ -1,0 +1,100 @@
+@model MVC_projekt.Models.BrowseViewModel
+
+@{
+    ViewData["Title"] = "Browse Tabs";
+}
+
+<section>
+    <div class="browse-header">
+        <h1>Browse Tabs</h1>
+        <p>Discover and explore guitar tablature from our community</p>
+
+        <form method="get" class="search-form">
+            <div class="search-row">
+                <input type="text"
+                       name="searchTerm"
+                       value="@Model.SearchTerm"
+                       placeholder="Search by title, artist, or creator..."
+                       class="search-input" />
+                <button type="submit" class="search-button">Search</button>
+            </div>
+
+            <div class="browse-layout">
+                <aside class="filter-sidebar">
+                    <div class="filter-panel">
+                        <div class="filter-panel-header">
+                            <h3>Filters</h3>
+                            <p>Refine results by tag</p>
+                        </div>
+
+                        <div class="filter-section">
+                            <h4>Difficulty</h4>
+                            @foreach (var difficulty in Model.AllDifficulties)
+                            {
+                                <label class="filter-label">
+                                    <input type="checkbox"
+                                           name="selectedDifficulties"
+                                           value="@difficulty"
+                                           @(Model.SelectedDifficulties.Contains(difficulty.ToString()) ? "checked" : "") />
+                                    <span>@difficulty</span>
+                                    <span class="filter-count">(@Model.DifficultyCounts[difficulty])</span>
+                                </label>
+                            }
+                        </div>
+
+                        <div class="filter-section">
+                            <h4>Tuning</h4>
+                            @foreach (var tuning in Model.AllTunings)
+                            {
+                                <label class="filter-label">
+                                    <input type="checkbox"
+                                           name="selectedTunings"
+                                           value="@tuning"
+                                           @(Model.SelectedTunings.Contains(tuning) ? "checked" : "") />
+                                    <span>@tuning</span>
+                                    <span class="filter-count">(@Model.TuningCounts[tuning])</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+                </aside>
+
+                <div class="browse-content">
+                    <div class="tabs-grid">
+                        @if (Model.Tabs.Any())
+                        {
+                            @foreach (var tab in Model.Tabs)
+                            {
+                                <div class="tab-card">
+                                    <div class="tab-header">
+                                        <h3 class="tab-title">@tab.Title</h3>
+                                        <span class="tab-difficulty difficulty-@tab.Difficulty.ToString().ToLower()">@tab.Difficulty</span>
+                                    </div>
+
+                                    <div class="tab-info">
+                                        <p class="tab-artist"><strong>Artist:</strong> @tab.Artist</p>
+                                        <p class="tab-creator"><strong>Created by:</strong> @tab.Creator.Username</p>
+                                        <p class="tab-tuning"><strong>Tuning:</strong> @tab.StringTuning</p>
+                                        <p class="tab-bpm"><strong>BPM:</strong> @tab.BPM</p>
+                                        <p class="tab-date"><strong>Created:</strong> @tab.DateCreated.ToString("MMM dd, yyyy")</p>
+                                    </div>
+
+                                    <div class="tab-actions">
+                                        <a asp-controller="Browse" asp-action="Details" asp-route-id="@tab.Id" class="view-button">View Tab</a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="no-results">
+                                <p>No tabs found matching your search.</p>
+                                <a href="@Url.Action("Browse", "Browse")" class="clear-search">Clear search</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

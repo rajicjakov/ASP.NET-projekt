@@ -1,0 +1,28 @@
+@model MVC_projekt.Models.Tab
+
+@{
+    ViewData["Title"] = "View Tab";
+}
+
+<section>
+    <div class="browse-header">
+        <h1>@Model.Title</h1>
+        <p>Artist: @Model.Artist</p>
+    </div>
+
+    <div class="tab-view-container">
+        <div class="tab-summary">
+            <p><strong>Creator:</strong> @Model.Creator.Username</p>
+            <p><strong>Difficulty:</strong> @Model.Difficulty</p>
+            <p><strong>Tuning:</strong> @Model.StringTuning</p>
+            <p><strong>BPM:</strong> @Model.BPM</p>
+            <p><strong>Created:</strong> @Model.DateCreated.ToString("MMM dd, yyyy")</p>
+        </div>
+
+        <div class="tab-display-placeholder">
+            <h2>Tab preview area</h2>
+            <p>This is where the tab display will be rendered.</p>
+            <p>Once the tab rendering is implemented, the notation and measures will appear here.</p>
+        </div>
+    </div>
+</section>

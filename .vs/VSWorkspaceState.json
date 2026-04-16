@@ -2,9 +2,14 @@
   "ExpandedNodes": [
     "",
     "\\MVC_projekt",
-    "\\MVC_projekt\\Models",
-    "\\MVC_projekt\\Models\\Enums"
+    "\\MVC_projekt\\bin",
+    "\\MVC_projekt\\bin\\Release\\net7.0",
+    "\\MVC_projekt\\obj\\Debug\\net7.0",
+    "\\MVC_projekt\\Views\\Home",
+    "\\MVC_projekt\\Views\\Shared",
+    "\\MVC_projekt\\wwwroot\\css",
+    "\\MVC_projekt\\wwwroot\\js"
   ],
-  "SelectedNode": "\\MVC_projekt\\Program.cs",
+  "SelectedNode": "\\MVC_projekt\\MVC_projekt.csproj",
   "PreviewInSolutionExplorer": false
 }
