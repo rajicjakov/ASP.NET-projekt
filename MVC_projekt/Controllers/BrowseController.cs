@@ -13,6 +13,7 @@ namespace MVC_projekt.Controllers
             _tabRepository = tabRepository;
         }
 
+        [Route("[controller]")]
         public IActionResult Browse(string searchTerm = "", string[] selectedDifficulties = null, string[] selectedTunings = null)
         {
             var allTabs = _tabRepository.GetAllTabs();
@@ -61,6 +62,7 @@ namespace MVC_projekt.Controllers
             return View(model);
         }
 
+        [Route("[controller]/{id}")]
         public IActionResult Details(int id)
         {
             var tab = _tabRepository.GetTabById(id);
