@@ -4,6 +4,7 @@ using MVC_projekt.Services;
 
 namespace MVC_projekt.Controllers
 {
+    [Route("[controller]")]
     public class BrowseController : Controller
     {
         private readonly ITabRepository _tabRepository;
@@ -13,7 +14,7 @@ namespace MVC_projekt.Controllers
             _tabRepository = tabRepository;
         }
 
-        [Route("[controller]")]
+        [HttpGet("")]
         public IActionResult Browse(string searchTerm = "", string[] selectedDifficulties = null, string[] selectedTunings = null)
         {
             var allTabs = _tabRepository.GetAllTabs();
@@ -72,6 +73,15 @@ namespace MVC_projekt.Controllers
             }
 
             return View(tab);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("[controller]/Delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+            _tabRepository.DeleteTabById(id);
+            return RedirectToAction(nameof(Browse));
         }
 
         private static List<Tab> ApplySearch(List<Tab> tabs, string searchTerm)

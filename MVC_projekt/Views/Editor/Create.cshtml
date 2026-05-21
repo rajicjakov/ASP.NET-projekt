@@ -1,44 +1,102 @@
+@model MVC_projekt.Models.Tab?
+
 @{
-    ViewData["Title"] = "Create Tab";
+    ViewData["Title"] = Model?.Id > 0 ? "Edit Tab" : "Create Tab";
 }
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
 <section>
     <div class="browse-header">
-        <h1>Create New Tab</h1>
-        <p>Add a new guitar tab to the archive</p>
+        <h1>@(Model?.Id > 0 ? "Edit Tab" : "Create New Tab")</h1>
+        <p>@(Model?.Id > 0 ? "Change the current tab details and save." : "Add a new guitar tab to the archive")</p>
     </div>
 
     <div class="create-container">
-        <form method="post" class="create-form">
+        <form asp-controller="Editor" asp-action="Create" method="post" class="create-form">
+            @Html.AntiForgeryToken()
             <div class="form-grid">
+                @if (Model?.Id > 0)
+                {
+                    <input type="hidden" name="id" value="@Model.Id" />
+                }
+
                 <div class="form-group">
                     <label for="tabTitle">Song Title</label>
-                    <input type="text" id="tabTitle" name="title" class="form-input" required />
+                    <input type="text" id="tabTitle" name="title" class="form-input" value="@Model?.Title" required />
                 </div>
 
                 <div class="form-group">
                     <label for="tabArtist">Artist</label>
-                    <input type="text" id="tabArtist" name="artist" class="form-input" required />
+                    <input type="text" id="tabArtist" name="artist" class="form-input" value="@Model?.Artist" required />
                 </div>
 
                 <div class="form-group">
                     <label for="tabTuning">Tuning</label>
-                    <input type="text" id="tabTuning" name="tuning" class="form-input" placeholder="e.g., E-A-D-G-B-E" />
+                    <input type="text" id="tabTuning" name="tuning" class="form-input" placeholder="e.g., E-A-D-G-B-E" value="@Model?.StringTuning" />
                 </div>
+
+                @await Html.PartialAsync("_DatePicker", new MVC_projekt.Models.DatePickerModel
+                {
+                    Name = "dateCreated",
+                    Label = "Created Date",
+                    Placeholder = "Select a date",
+                    Value = Model?.DateCreated ?? DateTime.UtcNow
+                })
 
                 <div class="form-group">
                     <label for="tabBPM">BPM</label>
-                    <input type="number" id="tabBPM" name="bpm" class="form-input" />
+                    <input type="number" id="tabBPM" name="bpm" class="form-input" value="@Model?.BPM" />
                 </div>
 
                 <div class="form-group">
                     <label for="tabDifficulty">Difficulty</label>
                     <select id="tabDifficulty" name="difficulty" class="form-input">
-                        <option value="VeryEasy">Very Easy</option>
-                        <option value="Easy">Easy</option>
-                        <option value="Intermediate">Intermediate</option>
-                        <option value="Hard">Hard</option>
-                        <option value="Impossible">Impossible</option>
+                        @if (Model?.Difficulty == Difficulty.VeryEasy)
+                        {
+                            <option value="VeryEasy" selected>Very Easy</option>
+                        }
+                        else
+                        {
+                            <option value="VeryEasy">Very Easy</option>
+                        }
+
+                        @if (Model?.Difficulty == Difficulty.Easy)
+                        {
+                            <option value="Easy" selected>Easy</option>
+                        }
+                        else
+                        {
+                            <option value="Easy">Easy</option>
+                        }
+
+                        @if (Model?.Difficulty == Difficulty.Intermediate)
+                        {
+                            <option value="Intermediate" selected>Intermediate</option>
+                        }
+                        else
+                        {
+                            <option value="Intermediate">Intermediate</option>
+                        }
+
+                        @if (Model?.Difficulty == Difficulty.Hard)
+                        {
+                            <option value="Hard" selected>Hard</option>
+                        }
+                        else
+                        {
+                            <option value="Hard">Hard</option>
+                        }
+
+                        @if (Model?.Difficulty == Difficulty.Impossible)
+                        {
+                            <option value="Impossible" selected>Impossible</option>
+                        }
+                        else
+                        {
+                            <option value="Impossible">Impossible</option>
+                        }
                     </select>
                 </div>
             </div>
@@ -56,3 +114,70 @@
         </form>
     </div>
 </section>
+
+@section Scripts {
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Autocomplete for Song Title field
+            $("#tabTitle").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "/Editor/api/titles",
+                        type: "GET",
+                        data: {
+                            term: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                        },
+                        error: function() {
+                            response([]);
+                        }
+                    });
+                },
+                minLength: 1
+            });
+
+            // Autocomplete for Artist field
+            $("#tabArtist").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "/Editor/api/artists",
+                        type: "GET",
+                        data: {
+                            term: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                        },
+                        error: function() {
+                            response([]);
+                        }
+                    });
+                },
+                minLength: 1
+            });
+
+            // Autocomplete for Tuning field
+            $("#tabTuning").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "/Editor/api/tunings",
+                        type: "GET",
+                        data: {
+                            term: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                        },
+                        error: function() {
+                            response([]);
+                        }
+                    });
+                },
+                minLength: 1
+            });
+        });
+    </script>
+}

@@ -8,6 +8,13 @@
     <div class="browse-header">
         <h1>@Model.Title</h1>
         <p>Artist: @Model.Artist</p>
+        <div class="details-actions" style="margin-top:10px; display:flex; gap:10px;">
+            <a asp-controller="Editor" asp-action="Edit" asp-route-id="@Model.Id" class="form-button">Edit Tab</a>
+            <form asp-controller="Browse" asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this tab?');">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="form-button">Delete Tab</button>
+            </form>
+        </div>
     </div>
 
     <div class="tab-view-container">
@@ -16,7 +23,7 @@
             <p><strong>Difficulty:</strong> @Model.Difficulty</p>
             <p><strong>Tuning:</strong> @Model.StringTuning</p>
             <p><strong>BPM:</strong> @Model.BPM</p>
-            <p><strong>Created:</strong> @Model.DateCreated.ToString("MMM dd, yyyy")</p>
+            <p><strong>Created:</strong> <span class="localized-date" data-date="@Model.DateCreated.ToString("o")">@Model.DateCreated.ToString("o")</span></p>
         </div>
 
         <div class="tab-display-placeholder">
@@ -26,3 +33,24 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        (function() {
+            const locale = navigator.languages && navigator.languages.length > 0
+                ? navigator.languages[0]
+                : navigator.language || navigator.userLanguage || 'en-US';
+            const formatter = new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short', day: '2-digit' });
+            document.querySelectorAll('.localized-date').forEach(function(el) {
+                const dateValue = el.getAttribute('data-date');
+                if (!dateValue) {
+                    return;
+                }
+                const date = new Date(dateValue);
+                if (!isNaN(date)) {
+                    el.textContent = formatter.format(date);
+                }
+            });
+        })();
+    </script>
+}

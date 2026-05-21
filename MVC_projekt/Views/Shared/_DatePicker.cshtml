@@ -1,0 +1,38 @@
+@model MVC_projekt.Models.DatePickerModel
+
+<div class="form-group">
+    <label for="@Model.Name">@Model.Label</label>
+    <input type="text"
+           id="@Model.Name"
+           name="@Model.Name"
+           class="form-input date-picker"
+           placeholder="@Model.Placeholder"
+           value="@(Model.Value.HasValue ? Model.Value.Value.ToString("yyyy-MM-dd") : string.Empty)" />
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/hr.js"></script>
+<script>
+    (function() {
+        const inputId = "#@Model.Name";
+        const browserLang = (navigator.languages && navigator.languages.length > 0 ? navigator.languages[0] : navigator.language || navigator.userLanguage || "en").toLowerCase();
+        const isHr = browserLang.startsWith("hr");
+        const locale = isHr ? flatpickr.l10ns.hr : flatpickr.l10ns.default;
+
+        if (isHr && flatpickr.l10ns && flatpickr.l10ns.hr) {
+            flatpickr.localize(flatpickr.l10ns.hr);
+        } else {
+            flatpickr.localize(flatpickr.l10ns.default);
+        }
+
+        flatpickr(inputId, {
+            altInput: true,
+            altFormat: isHr ? "d.m.Y" : "F j, Y",
+            dateFormat: "Y-m-d",
+            defaultDate: "@(Model.Value.HasValue ? Model.Value.Value.ToString("yyyy-MM-dd") : string.Empty)",
+            locale: locale,
+            allowInput: true
+        });
+    })();
+</script>

@@ -12,6 +12,7 @@
         <form method="get" class="search-form">
             <div class="search-row">
                 <input type="text"
+                       id="searchTerm"
                        name="searchTerm"
                        value="@Model.SearchTerm"
                        placeholder="Search by title, artist, or creator..."
@@ -76,7 +77,7 @@
                                         <p class="tab-creator"><strong>Created by:</strong> @tab.Creator.Username</p>
                                         <p class="tab-tuning"><strong>Tuning:</strong> @tab.StringTuning</p>
                                         <p class="tab-bpm"><strong>BPM:</strong> @tab.BPM</p>
-                                        <p class="tab-date"><strong>Created:</strong> @tab.DateCreated.ToString("MMM dd, yyyy")</p>
+                                        <p class="tab-date"><strong>Created:</strong> <span class="localized-date" data-date="@tab.DateCreated.ToString("o")">@tab.DateCreated.ToString("o")</span></p>
                                     </div>
 
                                     <div class="tab-actions">
@@ -98,3 +99,24 @@
         </form>
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        (function() {
+            const locale = navigator.languages && navigator.languages.length > 0
+                ? navigator.languages[0]
+                : navigator.language || navigator.userLanguage || 'en-US';
+            const formatter = new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short', day: '2-digit' });
+            document.querySelectorAll('.localized-date').forEach(function(el) {
+                const dateValue = el.getAttribute('data-date');
+                if (!dateValue) {
+                    return;
+                }
+                const date = new Date(dateValue);
+                if (!isNaN(date)) {
+                    el.textContent = formatter.format(date);
+                }
+            });
+        })();
+    </script>
+}

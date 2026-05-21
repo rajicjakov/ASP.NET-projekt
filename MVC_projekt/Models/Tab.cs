@@ -29,7 +29,8 @@ namespace MVC_projekt.Models
         [StringLength(50)]
         public string StringTuning { get; set; } = string.Empty;
 
-        [Range(1, 300)]
+        [Required]
+        [Range(1, 300, ErrorMessage = "BPM must be at least 1.")]
         public int BPM { get; set; }
 
         [Required]
