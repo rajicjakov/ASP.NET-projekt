@@ -72,20 +72,18 @@ namespace MVC_projekt.Services
             }
         }
 
-        public void AddUser(User user)
+        public List<Tab> GetTabsByCreator(int creatorId)
         {
-            _context.Users.Add(user);
-            _context.SaveChanges();
-        }
-
-        public void DeleteUserById(int id)
-        {
-            var user = _context.Users.Find(id);
-            if (user != null)
-            {
-                _context.Users.Remove(user);
-                _context.SaveChanges();
-            }
+            return _context.Tabs
+                .Where(t => t.CreatorId == creatorId)
+                .Include(t => t.Creator)
+                .Include(t => t.Measures)
+                    .ThenInclude(m => m.Columns)
+                        .ThenInclude(c => c.Notes)
+                .Include(t => t.Measures)
+                    .ThenInclude(m => m.Columns)
+                        .ThenInclude(c => c.ColumnDuration)
+                .ToList();
         }
     }
 }

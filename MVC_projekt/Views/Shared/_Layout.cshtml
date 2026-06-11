@@ -17,15 +17,28 @@
                         <a class="nav-button" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li>
-                        <a class="nav-button" asp-area="" asp-controller="Login" asp-action="Login">Login</a>
-                    </li>
-                    <li>
                         <a class="nav-button" asp-area="" asp-controller="Editor" asp-action="Create">Create</a>
                     </li>
                     <li>
                         <a class="nav-button" asp-area="" asp-controller="Browse" asp-action="Browse">Browse</a>
                     </li>
                 </ul>
+
+                <div class="nav-profile">
+                    @if (User?.Identity?.IsAuthenticated ?? false)
+                    {
+                        <a class="profile-link" asp-controller="Profile" asp-action="Index">
+                            <div class="profile-widget">
+                                <img class="profile-img" src="/lib/bootstrap/icons/person-circle.svg" alt="avatar" />
+                                <span class="profile-name">@User.Identity.Name</span>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="nav-button" asp-area="" asp-controller="Login" asp-action="Login">Login</a>
+                    }
+                </div>
             </div>
         </nav>
     </header>

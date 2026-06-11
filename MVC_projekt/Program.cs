@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MVC_projekt.Data;
 using MVC_projekt.Models;
@@ -10,6 +10,32 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
+    {
+        options.Password.RequireDigit = true;
+        options.Password.RequiredLength = 6;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireLowercase = true;
+        options.User.RequireUniqueEmail = true;
+    })
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Login/Login";
+    options.LogoutPath = "/Login/Logout";
+});
+
+// External authentication (Google)
+builder.Services.AddAuthentication()
+    .AddGoogle(googleOptions =>
+    {
+        googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+        googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    });
+
 builder.Services.AddScoped<ITabRepository, DbTabRepository>();
 
 var app = builder.Build();
@@ -17,15 +43,15 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
     context.Database.Migrate();
 
-    if (!context.Tabs.Any())
+    if (!context.Users.Any())
     {
         var user1 = new User
         {
             Username = "Đuro",
             Email = "djuro@example.com",
-            PasswordHash = PasswordHasher.Hash("Password123!"),
             DateJoined = DateTime.UtcNow.AddDays(-15),
             Role = UserRole.Regular
         };
@@ -34,7 +60,6 @@ using (var scope = app.Services.CreateScope())
         {
             Username = "Pero",
             Email = "pero@example.com",
-            PasswordHash = PasswordHasher.Hash("Password123!"),
             DateJoined = DateTime.UtcNow.AddDays(-25),
             Role = UserRole.Regular
         };
@@ -43,10 +68,13 @@ using (var scope = app.Services.CreateScope())
         {
             Username = "Ana",
             Email = "ana@example.com",
-            PasswordHash = PasswordHasher.Hash("Admin123!"),
             DateJoined = DateTime.UtcNow.AddDays(-5),
             Role = UserRole.Admin
         };
+
+        var createResult1 = userManager.CreateAsync(user1, "Password123!").GetAwaiter().GetResult();
+        var createResult2 = userManager.CreateAsync(user2, "Password123!").GetAwaiter().GetResult();
+        var createResult3 = userManager.CreateAsync(user3, "Admin123!").GetAwaiter().GetResult();
 
         var tabs = new List<Tab>
         {
@@ -82,7 +110,6 @@ using (var scope = app.Services.CreateScope())
             }
         };
 
-        context.Users.AddRange(user1, user2, user3);
         context.Tabs.AddRange(tabs);
         context.SaveChanges();
     }
@@ -101,6 +128,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

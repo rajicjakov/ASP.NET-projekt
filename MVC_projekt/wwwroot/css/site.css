@@ -719,3 +719,34 @@ footer.footer {
     width: 100%;
   }
 }
+
+.nav-profile {
+  display: flex;
+  align-items: center;
+}
+
+.profile-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.profile-widget {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.profile-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  object-fit: cover;
+  background: #ffffff;
+  border: 2px solid rgba(255,255,255,0.15);
+}
+
+.profile-name {
+  color: #ffffff;
+  font-weight: 600;
+}

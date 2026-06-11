@@ -1,19 +1,24 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MVC_projekt.Models;
 using MVC_projekt.Services;
 using MVC_projekt.Data;
-using MVC_projekt.Models;
 
 namespace MVC_projekt.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     public class EditorController : Controller
     {
         private readonly ITabRepository _tabRepository;
+        private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
 
-        public EditorController(ITabRepository tabRepository, ApplicationDbContext context)
+        public EditorController(ITabRepository tabRepository, UserManager<User> userManager, ApplicationDbContext context)
         {
             _tabRepository = tabRepository;
+            _userManager = userManager;
             _context = context;
         }
 
@@ -37,7 +42,7 @@ namespace MVC_projekt.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(int? id, string title, string artist, string tuning, int? bpm, Difficulty difficulty, string dateCreated)
+        public async Task<IActionResult> Create(int? id, string title, string artist, string tuning, int? bpm, Difficulty difficulty, string dateCreated)
         {
             if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(artist))
             {
@@ -74,19 +79,10 @@ namespace MVC_projekt.Controllers
                 return RedirectToAction("Details", "Browse", new { id = existingTab.Id });
             }
 
-            var defaultUser = _context.Users.FirstOrDefault();
-            if (defaultUser == null)
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
             {
-                defaultUser = new User
-                {
-                    Username = "default",
-                    Email = "default@example.com",
-                    PasswordHash = PasswordHasher.Hash("Password123!"),
-                    DateJoined = DateTime.UtcNow,
-                    Role = UserRole.Regular
-                };
-                _context.Users.Add(defaultUser);
-                _context.SaveChanges();
+                return Challenge();
             }
 
             var tab = new Tab
@@ -97,7 +93,7 @@ namespace MVC_projekt.Controllers
                 BPM = bpm ?? 0,
                 Difficulty = difficulty,
                 DateCreated = parsedDate,
-                CreatorId = defaultUser.Id
+                CreatorId = currentUser.Id
             };
 
             _tabRepository.AddTab(tab);

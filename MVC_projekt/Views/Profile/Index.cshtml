@@ -1,0 +1,68 @@
+@model MVC_projekt.Models.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" rel="stylesheet" />
+
+<div class="welcome-card">
+    <div style="display:flex;align-items:center;gap:1rem;">
+        <img id="profilePhoto" src="@Model.PhotoUrl" alt="avatar" style="width:120px;height:120px;border-radius:9999px;object-fit:cover;" />
+        <div>
+            <h1>@Model.User.UserName</h1>
+            <p>@Model.User.Email</p>
+            <p>Joined: @Model.User.DateJoined.ToString("yyyy-MM-dd")</p>
+            <p>Role: @Model.User.Role</p>
+        </div>
+    </div>
+
+    <div style="margin-top:1rem; display:flex; gap:1rem; flex-wrap:wrap;">
+        <a asp-controller="Browse" asp-action="MyTabs" class="form-button">My Tabs</a>
+        <form asp-controller="Login" asp-action="Logout" method="post">
+            <button type="submit" class="form-button">Logout</button>
+        </form>
+    </div>
+
+    <div style="margin-top:1rem;">
+        <form id="photoDropzone" class="dropzone" action="@Url.Action("UploadPhoto", "Profile")" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div class="dz-message">Drop or click to upload your profile photo</div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+<script>
+    Dropzone.autoDiscover = false;
+    (function(){
+        var tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+        var token = tokenInput ? tokenInput.value : '';
+        var form = document.getElementById('photoDropzone');
+
+        var myDropzone = new Dropzone("#photoDropzone", {
+            url: form ? form.action : undefined,
+            method: 'post',
+            paramName: "file",
+            maxFiles: 1,
+            acceptedFiles: "image/*",
+            headers: {
+                "RequestVerificationToken": token
+            },
+            init: function() {
+                this.on("sending", function(file, xhr, formData) {
+                    if (!token && tokenInput) {
+                        token = tokenInput.value;
+                    }
+                    formData.append("__RequestVerificationToken", token);
+                });
+                this.on("success", function(file, resp){
+                    if(resp && resp.url){
+                        document.getElementById('profilePhoto').src = resp.url;
+                    }
+                });
+                this.on("maxfilesexceeded", function(file) { this.removeAllFiles(); this.addFile(file); });
+            }
+        });
+    })();
+</script>

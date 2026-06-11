@@ -48,6 +48,12 @@
 
                 <button type="submit" class="form-button">Log In</button>
             </form>
+
+            <form asp-controller="Login" asp-action="ExternalLogin" method="post" style="margin-top:10px;">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="provider" value="Google" />
+                <button type="submit" class="form-button" style="background:#dd4b39;color:#fff;border:none;padding:10px 16px;">Sign in with Google</button>
+            </form>
         </div>
 
         <div class="auth-form register-form">

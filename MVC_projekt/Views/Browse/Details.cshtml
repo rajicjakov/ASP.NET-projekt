@@ -9,11 +9,14 @@
         <h1>@Model.Title</h1>
         <p>Artist: @Model.Artist</p>
         <div class="details-actions" style="margin-top:10px; display:flex; gap:10px;">
-            <a asp-controller="Editor" asp-action="Edit" asp-route-id="@Model.Id" class="form-button">Edit Tab</a>
-            <form asp-controller="Browse" asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this tab?');">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="form-button">Delete Tab</button>
-            </form>
+            @if ((ViewBag.IsAdmin == true) || (ViewBag.CurrentUserId != null && ViewBag.CurrentUserId == Model.CreatorId))
+            {
+                <a asp-controller="Editor" asp-action="Edit" asp-route-id="@Model.Id" class="form-button">Edit Tab</a>
+                <form asp-controller="Browse" asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this tab?');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="form-button">Delete Tab</button>
+                </form>
+            }
         </div>
     </div>
 
